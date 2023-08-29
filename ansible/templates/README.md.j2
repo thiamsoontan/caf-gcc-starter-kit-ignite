@@ -1,0 +1,249 @@
+# deployment
+# starter kit launchpad setup
+# 1. create a bastion host
+
+see steps in /tf/caf/gcc_starter/Starter_launchpad_README.md
+
+# login to tenant - must use this to login
+az login --tenant [tenant id] e.g. htx sandpit ac20add1-ffda-45c1-adc5-16a0db15810f
+
+# subscription
+az account set --subscription [your subscription id] 
+
+
+=======================================================
+# Create container group with system-managed identity
+========================================================
+
+=======================================================
+# image: aztfmod/rover-agent:1.4.6-2307.0508-gitlab
+# aztfmod/rover:1.5.2-2307.0508
+========================================================
+
+az group create --name escep-rg-launchpad --location southeastasia
+
+RG_ID=$(az group show --name escep-rg-launchpad --query id --output tsv)
+
+
+# az subscription show --name sandpit-htx-Trials-CEP-Staging --query id --output tsv
+
+az group create --name escep-rg-launchpad --location southeastasia
+
+RG_ID="/subscriptions/6f035180-4066-42f0-b0fa-5fbc1ae67500"
+
+az container create \
+  --name aci-rovercontainer \
+  --resource-group escep-rg-launchpad \
+  --image aztfmod/rover-agent:1.4.6-2307.0508-gitlab  \
+  --vnet vnet-aci \
+  --vnet-address-prefix 192.200.1.96/27 \
+  --subnet snet-aci  \
+  --subnet-address-prefix 192.200.1.96/28 \
+  --assign-identity --scope $RG_ID \
+  --cpu 4 \
+  --memory 16 \
+  --command-line '"/bin/sh" "-c" "while sleep 1000; do :; done"'
+
+
+# TODO: manually grant OWNER right to aci-rovercontainer managed identity
+# copy and replace the automation-Identity-object-id
+# TODO: to test if the below command work
+az RoleAssignment \
+    -ObjectId 46b05031-eb48-4e48-b40a-684f9309a981 \
+    -Scope "/subscriptions/6f035180-4066-42f0-b0fa-5fbc1ae67500" \
+    -RoleDefinitionName "Owner"
+
+# OR   --command-line "tail -f /dev/null"
+
+az container show \
+  --resource-group escep-rg-launchpad \
+  --name aci-rovercontainer
+
+
+SP_ID=$(az container show \
+  --resource-group escep-rg-launchpad \
+  --name aci-rovercontainer \
+  --query identity.principalId --out tsv)
+
+az container exec \
+  --resource-group escep-rg-launchpad \
+  --name aci-rovercontainer \
+  --exec-command "/bin/zsh"
+
+az login --identity
+
+
+
+open azure portal, grant OWNER right to container system managed identity "aci-rovercontainer"
+
+# prepare the rover containers
+
+git clone https://github.com/thiamsoontan/lab
+
+# unzip file.zip -d destination_folder
+
+unzip /tf/caf/lab/caf-terraform-gcc-starter-kit.zip -d /tf/caf/caf-terraform-gcc-starter-kit
+
+# cd caf-terraform-gcc-starter-kit/caf-terraform-gcc-starter-kit
+
+mv /tf/caf/caf-terraform-gcc-starter-kit/caf-terraform-gcc-starter-kit/gcc_starter /tf/caf
+mv /tf/caf/caf-terraform-gcc-starter-kit/caf-terraform-gcc-starter-kit/patches /tf/caf
+mv /tf/caf/caf-terraform-gcc-starter-kit/caf-terraform-gcc-starter-kit/.devcontainer /tf/caf
+
+# ./tf/caf/caf-terraform-gcc-starter-kit/caf-terraform-gcc-starter-kit/.devcontainer/setup.sh
+
+sudo chmod -R -f 777 /tf/caf/.devcontainer/setup.sh
+cd /tf/caf/.devcontainer
+./setup.sh
+cd /tf/caf
+
+
+# manually/patch add computerName="aci-rovercontainer" to line 673 to use container instance "aci-rovercontainer"
+# vi /tf/rover/functions.sh
+
+sudo chmod -R -f 777 /tf/rover/functions.sh 
+
+cp /tf/caf/patches/rover/functions.sh /tf/rover/functions.sh
+
+# add a # to line 674
+# sed '673{s/^/#/;s/^##//}' /tf/rover/functions.sh # not working
+# add computerName="aci-rovercontainer" to line 674
+# sed -i '673icomputerName="aci-rovercontainer"' /tf/rover/functions.sh # not working
+
+# Error: Tenant shouldn't be specified for managed identity account
+# the below command solve the error "Error: Tenant shouldn't be specified for managed identity account"
+
+# ** IMPORTANT - set ARM_USE_MSI = true everytime you bring up the zsh terminal
+export ARM_USE_MSI=true
+
+# export ARM_SUBSCRIPTION_ID=6f035180-4066-42f0-b0fa-5fbc1ae67500
+# export ARM_TENANT_ID=ac20add1-ffda-45c1-adc5-16a0db15810f
+
+=======================================================
+# End container group with system-managed identity
+========================================================
+
+
+Steps
+1. create development environment
+go to /tf/caf/gcc_starter/gcc-dev-env/README.md
+
+# ** IMPORTANT - set ARM_USE_MSI = true everytime you bring up the zsh terminal if using agent to execute rover commands
+export ARM_USE_MSI=true
+
+# launchpad
+=================================================================================
+
+2. ok - launchpad - /tf/caf/gcc_starter/landingzone/configuration/level0/launchpad
+
+rover -lz /tf/caf/landingzones/caf_launchpad \
+  -launchpad \
+  -var-folder /tf/caf/gcc_starter/landingzone/configuration/level0/launchpad \
+  -env uat \
+  -skip-permission-check \
+  -a plan
+
+# networking
+=================================================================================
+
+3. ok - level 3 - shared services - /tf/caf/gcc_starter/landingzone/configuration/level3/shared_services
+
+rover -lz rover -lz /tf/caf/landingzones/caf_solution \
+  -level level3 \
+  -var-folder /tf/caf/gcc_starter/landingzone/configuration/level3/shared_services \
+  -parallelism 30 \
+  -env uat \
+  -skip-permission-check \
+  -tfstate shared_services.tfstate \
+  -a plan
+
+4. ok - level 3 - management - /tf/caf/gcc_starter/landingzone/configuration/level3/networking_spoke_management
+
+rover -lz rover -lz /tf/caf/landingzones/caf_solution \
+-level level3 \
+-var-folder /tf/caf/gcc_starter/landingzone/configuration/level3/networking_spoke_management \
+-parallelism 30 \
+-env uat \
+-tfstate networking_spoke_management.tfstate \
+-a plan
+
+5. ok level 3 - devops - /tf/caf/gcc_starter/landingzone/configuration/level3/networking_spoke_devops
+
+rover -lz /tf/caf/landingzones/caf_solution \
+-level level3 \
+-var-folder /tf/caf/gcc_starter/landingzone/configuration/level3/networking_spoke_devops \
+-parallelism 30 \
+-env uat \
+-tfstate networking_spoke_devops.tfstate \
+-a plan
+
+6. level 3 - hub internet - /tf/caf/gcc_starter/landingzone/configuration/level3/networking_hub_internet
+
+rover -lz rover -lz /tf/caf/landingzones/caf_solution \
+-level level3 \
+-var-folder /tf/caf/gcc_starter/landingzone/configuration/level3/networking_hub_internet \
+-env uat \
+-tfstate networking_hub_internet.tfstate \
+-a plan
+
+7. level 3 - hub intranet - /tf/caf/gcc_starter/landingzone/configuration/level3/networking_hub_intranet
+
+rover -lz rover -lz /tf/caf/landingzones/caf_solution \
+-level level3 \
+-var-folder /tf/caf/gcc_starter/landingzone/configuration/level3/networking_hub_intranet \
+-env uat \
+-tfstate networking_hub_intranet.tfstate \
+-a plan
+
+8. level 3 - spoke project - /tf/caf/gcc_starter/landingzone/configuration/level3/networking_spoke_internet
+
+rover -lz rover -lz /tf/caf/landingzones/caf_solution \
+-level level3 \
+-var-folder /tf/caf/gcc_starter/landingzone/configuration/level3/networking_spoke_internet \
+-env uat \
+-tfstate networking_spoke_internet.tfstate \
+-a plan
+
+
+# firewall, application gateway
+===============================
+
+9. egress firewall internet
+
+10. egress firewall intranet
+
+11. agw internet
+
+12. agw intranet
+
+13. ingress firewall internet
+
+14. ingress firewall intranet
+
+
+# level 4 - solution accelerators
+================================================================================
+
+
+# DevOps, Management Zone
+===============================
+
+18. bastion host
+
+19. tooling vm
+
+20. runner vm or container instances
+
+# Project
+===============================
+
+21. sql server
+
+22. acr
+
+23. aks
+
+24. deploy sample azure-vote application and validation through internet and intranet
+
+
+
