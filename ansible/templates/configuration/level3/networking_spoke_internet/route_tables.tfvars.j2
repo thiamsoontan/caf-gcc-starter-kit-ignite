@@ -15,7 +15,7 @@ azurerm_routes = {
     # address_prefix     = "172.1.0.0/24" # dummy IP addresses    
     next_hop_type      = "VirtualAppliance"
     # next_hop_type_key  = "azurerm_firewall"
-    next_hop_in_ip_address = {{egress_internet_firewall_ip}} #"100.1.1.4" # TODO: set the ip address of virtual appliance 
+    next_hop_in_ip_address = "{{egress_internet_firewall_ip}}" #"100.1.1.4" # TODO: set the ip address of virtual appliance 
 
     # To be set when next_hop_type = "VirtualAppliance"
     private_ip_keys = { # e.g. 100.1.1.4
