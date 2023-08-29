@@ -1,7 +1,7 @@
 ---
 configuration:
-  agency_code: gra
-  project_code: moris
+  agency_code: caflabs
+  project_code: ignite
   cidr_ingress_egress_zone_subnet_ingress_internet: 100.73.38.0/26
   cidr_ingress_egress_zone_subnet_ingress_agw_internet: 100.73.38.64/26
   cidr_ingress_egress_zone_subnet_egress_internet: 100.73.39.0/26
