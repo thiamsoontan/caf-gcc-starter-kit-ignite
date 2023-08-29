@@ -39,12 +39,6 @@ az container create \
 
 
 # TODO: manually grant OWNER right to aci-rovercontainer managed identity
-# copy and replace the automation-Identity-object-id
-# TODO: to test if the below command work
-az RoleAssignment \
-    -ObjectId 46b05031-eb48-4e48-b40a-684f9309a981 \
-    -Scope "/subscriptions/6f035180-4066-42f0-b0fa-5fbc1ae67500" \
-    -RoleDefinitionName "Owner"
 
 # OR   --command-line "tail -f /dev/null"
 
