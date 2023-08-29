@@ -1,8 +1,6 @@
 # deployment
 # starter kit launchpad setup
-# 1. create a bastion host
-
-see steps in /tf/caf/gcc_starter/Starter_launchpad_README.md
+# 1. Create container group with system-managed identity
 
 # login to tenant - must use this to login
 az login --tenant [tenant id] e.g. htx sandpit ac20add1-ffda-45c1-adc5-16a0db15810f
@@ -10,6 +8,7 @@ az login --tenant [tenant id] e.g. htx sandpit ac20add1-ffda-45c1-adc5-16a0db158
 # subscription
 az account set --subscription [your subscription id] 
 
+Open cloud-shell through Azure Portal
 
 =======================================================
 # Create container group with system-managed identity
@@ -20,12 +19,6 @@ az account set --subscription [your subscription id]
 # aztfmod/rover:1.5.2-2307.0508
 ========================================================
 
-az group create --name escep-rg-launchpad --location southeastasia
-
-RG_ID=$(az group show --name escep-rg-launchpad --query id --output tsv)
-
-
-# az subscription show --name sandpit-htx-Trials-CEP-Staging --query id --output tsv
 
 az group create --name escep-rg-launchpad --location southeastasia
 
@@ -72,56 +65,49 @@ az container exec \
 
 az login --identity
 
-
-
 open azure portal, grant OWNER right to container system managed identity "aci-rovercontainer"
 
+git clone https://github.com/thiamsoontan/caf-gcc-starter-kit-ignite.git
+
+mv /tf/caf/caf-gcc-starter-kit-ignite/definition /tf/caf
+mv /tf/caf/caf-gcc-starter-kit-ignite/ansible /tf/caf
+mv /tf/caf/caf-gcc-starter-kit-ignite/patches /tf/caf
+mv /tf/caf/caf-gcc-starter-kit-ignite/.devcontainer /tf/caf
+
 # prepare the rover containers
-
-git clone https://github.com/thiamsoontan/lab
-
-# unzip file.zip -d destination_folder
-
-unzip /tf/caf/lab/caf-terraform-gcc-starter-kit.zip -d /tf/caf/caf-terraform-gcc-starter-kit
-
-# cd caf-terraform-gcc-starter-kit/caf-terraform-gcc-starter-kit
-
-mv /tf/caf/caf-terraform-gcc-starter-kit/caf-terraform-gcc-starter-kit/gcc_starter /tf/caf
-mv /tf/caf/caf-terraform-gcc-starter-kit/caf-terraform-gcc-starter-kit/patches /tf/caf
-mv /tf/caf/caf-terraform-gcc-starter-kit/caf-terraform-gcc-starter-kit/.devcontainer /tf/caf
-
-# ./tf/caf/caf-terraform-gcc-starter-kit/caf-terraform-gcc-starter-kit/.devcontainer/setup.sh
-
 sudo chmod -R -f 777 /tf/caf/.devcontainer/setup.sh
 cd /tf/caf/.devcontainer
 ./setup.sh
 cd /tf/caf
-
-
 # manually/patch add computerName="aci-rovercontainer" to line 673 to use container instance "aci-rovercontainer"
 # vi /tf/rover/functions.sh
 
 sudo chmod -R -f 777 /tf/rover/functions.sh 
-
 cp /tf/caf/patches/rover/functions.sh /tf/rover/functions.sh
-
-# add a # to line 674
-# sed '673{s/^/#/;s/^##//}' /tf/rover/functions.sh # not working
-# add computerName="aci-rovercontainer" to line 674
-# sed -i '673icomputerName="aci-rovercontainer"' /tf/rover/functions.sh # not working
-
-# Error: Tenant shouldn't be specified for managed identity account
-# the below command solve the error "Error: Tenant shouldn't be specified for managed identity account"
 
 # ** IMPORTANT - set ARM_USE_MSI = true everytime you bring up the zsh terminal
 export ARM_USE_MSI=true
 
-# export ARM_SUBSCRIPTION_ID=6f035180-4066-42f0-b0fa-5fbc1ae67500
-# export ARM_TENANT_ID=ac20add1-ffda-45c1-adc5-16a0db15810f
-
 =======================================================
 # End container group with system-managed identity
 ========================================================
+
+=======================================================
+# Ignite - code generator
+========================================================
+
+edit configuration file
+
+# execute ignite
+cd /tf/caf/ansible
+ansible-playbook gcc-starter-playbook.yml
+sudo chmod -R -f 777 /tf/caf/gcc_starter
+cd /tf/caf
+
+=======================================================
+# End Ignite - code generator
+========================================================
+
 
 
 Steps
