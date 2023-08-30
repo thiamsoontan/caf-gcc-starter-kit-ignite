@@ -16,7 +16,7 @@ private_dns = {
         ingress = {
           name    = "demoapp1"
           ttl     = 3600
-          records = ["ingress_internet_agw_ip"] # TODO: set the agw internet private ip address
+          records = ["{{ingress_internet_agw_ip}}"] # TODO: set the agw internet private ip address
         }
       }
            
