@@ -14,52 +14,51 @@ Open cloud-shell through Azure Portal
 # Create container group with system-managed identity
 ========================================================
 
-=======================================================
+
 # image: aztfmod/rover-agent:1.4.6-2307.0508-gitlab
-# aztfmod/rover:1.5.2-2307.0508
-========================================================
+#       or aztfmod/rover:1.5.2-2307.0508
+
 
 
 az group create --name escep-rg-launchpad --location southeastasia
 
-RG_ID="/subscriptions/xxxxxx-xxxx-42f0-b0fa-5fbc1ae67500"
+RG_ID="/subscriptions/6f035180-4066-42f0-b0fa-5fbc1ae67500"
 
+# cep-vnet-am-devops-prd - recommended vnet name
 az container create \
-  --name aci-rovercontainer \
+  --name aci-gitlab-runner \
   --resource-group escep-rg-launchpad \
   --image aztfmod/rover-agent:1.4.6-2307.0508-gitlab  \
-  --vnet vnet-aci \
+  --vnet escep-vnet-am-devops-uat \
   --vnet-address-prefix 192.200.1.96/27 \
-  --subnet snet-aci  \
+  --subnet escep-snet-aci  \
   --subnet-address-prefix 192.200.1.96/28 \
   --assign-identity --scope $RG_ID \
   --cpu 4 \
   --memory 16 \
   --command-line '"/bin/sh" "-c" "while sleep 1000; do :; done"'
 
-
-# TODO: manually grant OWNER right to aci-rovercontainer managed identity
-
 # OR   --command-line "tail -f /dev/null"
 
 az container show \
   --resource-group escep-rg-launchpad \
-  --name aci-rovercontainer
+  --name aci-gitlab-runner
 
 
 SP_ID=$(az container show \
   --resource-group escep-rg-launchpad \
-  --name aci-rovercontainer \
+  --name aci-gitlab-runner \
   --query identity.principalId --out tsv)
 
 az container exec \
   --resource-group escep-rg-launchpad \
-  --name aci-rovercontainer \
+  --name aci-gitlab-runner \
   --exec-command "/bin/zsh"
 
 az login --identity
 
-open azure portal, grant OWNER right to container system managed identity "aci-rovercontainer"
+# TODO: manually grant OWNER right to aci-gitlab-runner managed identity
+# open azure portal, grant OWNER right to container system managed identity "aci-gitlab-runner"
 
 git clone https://github.com/thiamsoontan/caf-gcc-starter-kit-ignite.git
 
@@ -73,7 +72,8 @@ sudo chmod -R -f 777 /tf/caf/.devcontainer/setup.sh
 cd /tf/caf/.devcontainer
 ./setup.sh
 cd /tf/caf
-# manually/patch add computerName="aci-rovercontainer" to line 673 to use container instance "aci-rovercontainer"
+
+# manually/patch add computerName="aci-gitlab-runner" to line 673 to use container instance "aci-gitlab-runner"
 # vi /tf/rover/functions.sh
 
 sudo chmod -R -f 777 /tf/rover/functions.sh 
@@ -92,9 +92,12 @@ export ARM_USE_MSI=true
 
 edit configuration file
 
+# check prefix and subscription id
+
 # execute ignite
 cd /tf/caf/ansible
-ansible-playbook gcc-starter-playbook.yml
+# ansible-playbook gcc-starter-playbook.yml
+rover ignite --playbook /tf/caf/ansible/gcc-starter-playbook.yml
 sudo chmod -R -f 777 /tf/caf/gcc_starter
 cd /tf/caf
 
@@ -102,6 +105,9 @@ cd /tf/caf
 # End Ignite - code generator
 ========================================================
 
+=================================================================================
+# Begin CAF Terraform for GCC
+=================================================================================
 
 
 Steps
@@ -114,7 +120,7 @@ export ARM_USE_MSI=true
 # launchpad
 =================================================================================
 
-2. ok - launchpad - /tf/caf/gcc_starter/landingzone/configuration/level0/launchpad
+2. launchpad - /tf/caf/gcc_starter/landingzone/configuration/level0/launchpad
 
 rover -lz /tf/caf/landingzones/caf_launchpad \
   -launchpad \
@@ -126,7 +132,7 @@ rover -lz /tf/caf/landingzones/caf_launchpad \
 # networking
 =================================================================================
 
-3. ok - level 3 - shared services - /tf/caf/gcc_starter/landingzone/configuration/level3/shared_services
+3. level 3 - shared services - /tf/caf/gcc_starter/landingzone/configuration/level3/shared_services
 
 rover -lz rover -lz /tf/caf/landingzones/caf_solution \
   -level level3 \
@@ -137,7 +143,7 @@ rover -lz rover -lz /tf/caf/landingzones/caf_solution \
   -tfstate shared_services.tfstate \
   -a plan
 
-4. ok - level 3 - management - /tf/caf/gcc_starter/landingzone/configuration/level3/networking_spoke_management
+4. level 3 - management - /tf/caf/gcc_starter/landingzone/configuration/level3/networking_spoke_management
 
 rover -lz rover -lz /tf/caf/landingzones/caf_solution \
 -level level3 \
@@ -147,7 +153,7 @@ rover -lz rover -lz /tf/caf/landingzones/caf_solution \
 -tfstate networking_spoke_management.tfstate \
 -a plan
 
-5. ok level 3 - devops - /tf/caf/gcc_starter/landingzone/configuration/level3/networking_spoke_devops
+5. level 3 - devops - /tf/caf/gcc_starter/landingzone/configuration/level3/networking_spoke_devops
 
 rover -lz /tf/caf/landingzones/caf_solution \
 -level level3 \
@@ -222,6 +228,12 @@ rover -lz rover -lz /tf/caf/landingzones/caf_solution \
 22. acr
 
 23. aks
+
+
+=================================================================================
+# End CAF Terraform for GCC
+=================================================================================
+
 
 24. deploy sample azure-vote application and validation through internet and intranet
 
