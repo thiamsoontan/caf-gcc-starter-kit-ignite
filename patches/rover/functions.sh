@@ -670,7 +670,7 @@ function get_logged_user_object_id {
         case "${clientId}" in
             "systemAssignedIdentity")
                 if [ -z ${MSI_ID} ]; then
-                    computerName="aci-rovercontainer" # TODO: hardcode the rover container name "aci-rovercontainer" here
+                    computerName="aci-gitlab-runner" # TODO: hardcode the rover container name "aci-gitlab-runner" here
                     # computerName=$(az rest --method get --headers Metadata=true --url http://169.254.169.254/metadata/instance?api-version=2020-09-01 | jq -r .compute.name)
                     az resource list -n ${computerName}
                     principalId=$(az resource list -n ${computerName} --query [*].identity.principalId --out tsv)
