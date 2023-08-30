@@ -126,14 +126,14 @@ application_gateway_applications_v1 = {
       rule1 = {
         name             = "rule1-app1"
         url_path_map_key = "app1_url_path_map"
-        paths            = "/*"
+        paths            = "/api/*"
         backend_pool_key  = "app1_bep"
         http_settings_key = "app1_http"        
       }
       # rule2 = {
       #   name             = "rule2-app1"
       #   url_path_map_key = "app1_url_path_map"
-      #   paths            = "/api/*" # TODO: test if this is set correctly
+      #   paths            = "/api1/*" # TODO: test if this is set correctly
       #   backend_pool_key  = "app1_bep"
       #   http_settings_key = "app1_http"        
       # }

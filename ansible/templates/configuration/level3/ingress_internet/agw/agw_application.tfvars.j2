@@ -115,7 +115,7 @@ application_gateway_applications_v1 = {
     url_path_maps = { # similar to url_path_rules
       app1_url_path_map = {
         name              = "url_path_map1"
-        paths             = "/api3/*" # not set at all
+        paths             = "/api2/*" # not set at all
         rule_name         = "path-rule1"
         backend_pool_key  = "app1_bep"
         http_settings_key = "app1_http"
@@ -133,7 +133,7 @@ application_gateway_applications_v1 = {
       # rule2 = {
       #   name             = "rule2-app1"
       #   url_path_map_key = "app1_url_path_map"
-      #   paths            = "/api2/*" # TODO: to test if this is working.
+      #   paths            = "/api1/*" # TODO: to test if this is working.
       #   backend_pool_key  = "app1_bep"
       #   http_settings_key = "app1_http"        
       # }
