@@ -80,3 +80,16 @@ cp /tf/caf/patches/container_group/container_group.tf /tf/caf/landingzones/aztfm
 
 # Patches 5: application_gateway_application
 cp /tf/caf/patches/application_gateway_application/scripts/set_resource.sh /tf/caf/landingzones/aztfmod/modules/networking/application_gateway_application/scripts/set_resource.sh
+
+# Patches 6: firewall policies - add tls_certificate at line 39
+copy /tf/caf/patches/firewall_policies/firewall_policy.tf /tf/caf/landingzones/aztfmod/modules/networking/firewall_policies/firewall_policy.tf
+
+# Patches 7: resolve diagnostic days retention issue - remove and comment "days    = log.value[3]" at line 38 and "days    = metric.value[3]" at line 54
+cp /tf/caf/patches/diagnostics/module.tf /tf/caf/landingzones/aztfmod/modules/diagnostics/module.tf
+
+# Patches 8: rover managed identity issue, unable to call access 169.254.169.254
+# manually execute the below steps in agent / container instance with managed identity
+cp /tf/caf/patches/rover/functions.sh /tf/rover/functions.sh
+# ** IMPORTANT - set ARM_USE_MSI = true everytime you bring up the zsh terminal if using agent to execute rover commands
+export ARM_USE_MSI=true
+
