@@ -49,6 +49,10 @@ if [ ! -d /tf/caf/landingzones ]; then
     cp /tf/caf/patches/application_gateway_application/scripts/set_resource.sh /tf/caf/landingzones/aztfmod/modules/networking/application_gateway_application/scripts/set_resource.sh
     # manually execute the below steps in agent
     # cp /tf/caf/patches/rover/functions.sh /tf/rover/functions.sh
+    # Patches 6: firewall policies - add tls_certificate at line 39
+    cp /tf/caf/patches/firewall_policies/firewall_policy.tf /tf/caf/landingzones/aztfmod/modules/networking/firewall_policies/firewall_policy.tf
+    # Patches 7: resolve diagnostic days retention issue - remove and comment "days    = log.value[3]" at line 38 and "days    = metric.value[3]" at line 54
+    cp /tf/caf/patches/diagnostics/module.tf /tf/caf/landingzones/aztfmod/modules/diagnostics/module.tf
     cd /tf/caf/
     # note: /tf/caf/landingzones/aztfmod/main.tf show the version of the azurerm
   fi
