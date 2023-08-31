@@ -1,8 +1,8 @@
 ---
 configuration_application:
-  apex_ip: 10.0.0.5 # dummy value
-  astra_ip: 10.0.0.6 # dummy value
-  meson_ip: 10.0.0.7 # dummy value
+  on_prem_api_ip: 10.0.0.5 # dummy value
+  on_prem_sftp_ip: 10.0.0.6 # dummy value
+  on_prem_mq_ip: 10.0.0.7 # dummy value
   ingress_intranet_agw_ip: 10.210.118.202 # dummy value
   ingress_internet_agw_ip: 100.73.38.74 # dummy value   
   ingress_internet_aks_ip: 100.2.0.95 # dummy value
