@@ -3,7 +3,7 @@
 # 1. Create container group with system-managed identity
 
 # login to tenant - must use this to login
-az login --tenant [tenant id] e.g. htx sandpit xxxxxx-ffda-45c1-adc5-xxxxxxxxxx
+az login --tenant [tenant id] e.g. htx sandpit ac20add1-ffda-45c1-adc5-16a0db15810f
 
 # subscription
 az account set --subscription [your subscription id] 
@@ -22,7 +22,7 @@ Open cloud-shell through Azure Portal
 
 az group create --name escep-rg-launchpad --location southeastasia
 
-RG_ID="/subscriptions/xxxxxx-4066-42f0-b0fa-xxxxxxxxxx"
+RG_ID="/subscriptions/6f035180-4066-42f0-b0fa-5fbc1ae67500"
 
 # cep-vnet-am-devops-prd - recommended vnet name
 az container create \
@@ -55,7 +55,12 @@ az container exec \
   --name aci-gitlab-runner \
   --exec-command "/bin/zsh"
 
+# execute commands line by line
+
 az login --identity
+
+# ** IMPORTANT - set ARM_USE_MSI = true everytime you bring up the zsh terminal
+export ARM_USE_MSI=true
 
 # TODO: manually grant OWNER right to aci-gitlab-runner managed identity
 # open azure portal, grant OWNER right to container system managed identity "aci-gitlab-runner"
@@ -79,11 +84,102 @@ cd /tf/caf
 sudo chmod -R -f 777 /tf/rover/functions.sh 
 cp /tf/caf/patches/rover/functions.sh /tf/rover/functions.sh
 
-# ** IMPORTANT - set ARM_USE_MSI = true everytime you bring up the zsh terminal
-export ARM_USE_MSI=true
+
 
 =======================================================
 # End container group with system-managed identity
+========================================================
+
+
+========================================================
+# VPN - point to site VPN
+========================================================
+
+az network vnet subnet create -g escep-rg-launchpad -n GatewaySubnet --vnet-name escep-vnet-am-devops-uat --address-prefix 192.200.1.112/29
+
+az network public-ip create -g escep-rg-launchpad -n escep-pip-gw --allocation-method Dynamic
+
+az network vnet-gateway create --resource-group escep-rg-launchpad --name escep-gw-clienttogitlabrunner --public-ip-addresses escep-pip-gw --vnet escep-vnet-am-devops-uat --gateway-type Vpn --sku VpnGw1 --vpn-type RouteBased 
+
+az network vnet-gateway show -g escep-rg-launchpad -n escep-gw-clienttogitlabrunner -o table
+
+az network public-ip show -n escep-pip-gw -g escep-rg-launchpad
+
+
+# Following command will be used to configure the Address pool and tunnel type.
+az network vnet-gateway update -g escep-rg-launchpad -n escep-gw-clienttogitlabrunner --address-prefixes 172.18.176.0/26 --client-protocol SSTP
+
+# The following command creates a self-signed root certificate named ‘P2SRootCert’
+# using window Powershell
+#=====================================================
+$cert = New-SelfSignedCertificate -Type Custom -KeySpec Signature -Subject “CN=P2SRootCert” -KeyExportPolicy Exportable -HashAlgorithm sha256 -KeyLength 2048 -CertStoreLocation “Cert:\CurrentUser\My” -KeyUsageProperty Sign -KeyUsage CertSign
+
+# if you did not close the old Powershell window, type the following command, The client certificate will be automatically installed in ‘Certificates – Current User\Personal\Certificates’ on your computer.
+New-SelfSignedCertificate -Type Custom -DnsName P2SChildCert -KeySpec Signature -Subject “CN=P2S ChildCert” -KeyExportPolicy Exportable -HashAlgorithm sha256 -KeyLength 2048 -CertStoreLocation “Cert:\CurrentUser\My” -Signer $cert -TextExtension @(“2.5.29.37={text}1.3.6.1.5.5.7.3.2”)
+
+# Export the root certificate public key (.cer):
+
+# After creating a self-signed root certificate, we will export the root certificate public key .cer file (not the private key). we will later upload this file to Azure. Following steps will help you export the .cer file for your self-signed root certificate:
+# First find the Thumb Print of Certificate:
+
+Get-ChildItem -Path Cert:\CurrentUser\My\ -recurse
+
+Thumbprint                                Subject
+----------                                -------
+F4A14BE97691D4407D7753C4CDAACBC275D071A8  CN=Thiam Soon Tan, OU=MSE, OU=Users, OU=CoreIdentity, DC=southpacific, DC=...
+A5863935440A80F4B0D664245A2F4E294BFABCB2  CN=thiamsoontan@microsoft.com, CN=S-1-12-1-2325722271-1170173618-342515833...
+A1EC84E15E09FA79E925DCE44933323108A369C1  CN=ba3fafe7-8ba7-4a30-8063-29d83fdd86d0
+6855603B1FC387C2E9292D7CE8FB29C95B494F34  CN=Thiam Soon Tan, OU=MSE, OU=Users, OU=CoreIdentity, DC=southpacific, DC=...
+>> 65BF70A3A74B2BD85C4F6F4AC8A63662868BA99E  CN=P2SRootCert
+>> 207F04CCBF63CE662767B7030E0FBE85BE83773A  CN=P2S ChildCert
+177E03A2153091FF499D40EAF3891F2705ADD597  CN=localhost
+
+#Next export to in a .cer file
+
+$cert = (Get-ChildItem -Path cert:\CurrentUser\My\65BF70A3A74B2BD85C4F6F4AC8A63662868BA99E)
+
+Export-Certificate -Cert $cert -FilePath c:\root.cer
+
+The above Export-Certificate cmdlet does not offer the “Base-64 encoded X.509 (.CER)” type to be exported so we need to run the following command.
+
+cd c:\windows\system32
+
+.\certutil.exe -encode c:\root.cer c:\base64cert.cer
+
+
+
+# Now we can upload the .cer file (which contains the public key information) for a trusted root certificate to Azure. Once a.cer file is uploaded, Azure can use it to authenticate clients that have installed a client certificate generated from the trusted root certificate. The following command will be used to upload .Cer file
+# using zsh terminal
+#=====================================================
+
+# copy the two cert into rover cert folder /tf/caf/cert/base64cert.cer
+
+az network vnet-gateway root-cert create -g escep-rg-launchpad -n P2SRootCert --gateway-name escep-gw-clienttogitlabrunner --public-cert-data "/tf/caf/cert/base64cert.cer"
+
+
+
+# Powershell
+======================================================
+# Following command will be used to export Cert in .pfx file with Password “abc123”
+
+$mypwd = ConvertTo-SecureString -String “abc123” -Force -AsPlainText
+Get-ChildItem -Path cert:\currentuser\my\207F04CCBF63CE662767B7030E0FBE85BE83773A | Export-PfxCertificate -FilePath C:\mypfx.pfx -Password $mypwd
+
+
+$mypwd = Get-Credential -UserName ‘Enter password below’ -Message ‘Enter password below’
+# a dialog box will apprear type the certificate password “abc123”
+
+# type very next command to import the PFX file my.pfx with a private non-exportable key into the My store for the Current User.
+Import-PfxCertificate -FilePath C:\mypfx.pfx -CertStoreLocation Cert:\currentuser\My -Password $mypwd.Password
+
+
+# zsh termianl
+# to download VPN client, type following: (or download from Azure Portal "escep-gw-clienttogitlabrunner | Point-to-site configuration")
+
+az network vnet-gateway vpn-client generate --resource-group escep-rg-launchpad --name escep-gw-clienttogitlabrunner --processor-architecture Amd64
+
+========================================================
+# End VPN - point to site VPN
 ========================================================
 
 =======================================================
