@@ -181,7 +181,12 @@ az network vnet-gateway vpn-client generate --resource-group escep-rg-launchpad 
 # Ignite - code generator
 ========================================================
 
-edit configuration file
+# edit the below configuration files
+
+/tf/caf/definition/config_application.yaml
+/tf/caf/definition/config_gcc.yaml
+/tf/caf/definition/config_solution_accelerators.yaml
+
 
 # check prefix and subscription id
 
@@ -202,7 +207,7 @@ cd /tf/caf
 
 
 Steps
-1. create development environment
+1. OPTIONAL - create development environment (only for your own test environment)
 go to /tf/caf/gcc_starter/gcc-dev-env/README.md
 
 # ** IMPORTANT - set ARM_USE_MSI = true everytime you bring up the zsh terminal if using agent to execute rover commands
