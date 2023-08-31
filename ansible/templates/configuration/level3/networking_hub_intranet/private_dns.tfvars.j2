@@ -5,21 +5,18 @@ private_dns = {
     resource_group_key = "networking_hub_intranet_re1"
 
     records = {
-      a_records1 = {
-        ingress = {
+      a_records = {
+        aks = {
           name    = "aks"
           ttl     = 3600
           records = ["{{ingress_intranet_aks_ip}}"] # TODO: set the aks intranet private ip address
         }
-      }      
-      a_records2 = {
         ingress = {
           name    = "demoapp1"
           ttl     = 3600
           records = ["{{ingress_intranet_agw_ip}}"] # TODO: set the agw intranet private ip address
-        }
-      }
-           
+        }        
+      }                
     }
 
     vnet_links = {
