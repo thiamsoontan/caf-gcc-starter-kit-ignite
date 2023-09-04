@@ -1,9 +1,9 @@
 ---
 # id = "/subscriptions/e22a351f-db36-4a02-9793-0f2189d5f3ab/resourceGroups/ignite-rg-dev-env-re1/providers/Microsoft.Network/virtualNetworks/ignite-vnet-spoke-re1"
 configuration_application:
-  apex_ip: 10.0.0.5
-  astra_ip: 10.0.0.6
-  meson_ip: 10.0.0.7
+  on_prem_api_ip: 10.0.0.5 # dummy value
+  on_prem_sftp_ip: 10.0.0.6 # dummy value
+  on_prem_mq_ip: 10.0.0.7 # dummy value
   ingress_intranet_agw_ip: 10.2.0.74
   ingress_internet_agw_ip: 100.2.0.74
   ingress_internet_aks_ip: 100.2.0.95
