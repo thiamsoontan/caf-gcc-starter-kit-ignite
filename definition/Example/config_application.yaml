@@ -1,5 +1,4 @@
 ---
-# id = "/subscriptions/e22a351f-db36-4a02-9793-0f2189d5f3ab/resourceGroups/ignite-rg-dev-env-re1/providers/Microsoft.Network/virtualNetworks/ignite-vnet-spoke-re1"
 configuration_application:
   on_prem_api_ip: 10.0.0.5 # dummy value
   on_prem_sftp_ip: 10.0.0.6 # dummy value
@@ -8,13 +7,14 @@ configuration_application:
   ingress_internet_agw_ip: 100.2.0.74
   ingress_internet_aks_ip: 100.2.0.95
   ingress_intranet_aks_ip: 100.2.0.95
-  # aks_ip_internet: 100.2.0.94
-  # aks_ip_intranet: 100.2.0.94
-  # agw_ip_internet: 100.1.0.74
-  # agw_ip_intranet: 10.1.0.74  
+  ingress_internet_aks_fqdn: aks.internet.caflabs.com # dummy value  
+  ingress_intranet_aks_fqdn: aks.intranet.caflabs.com # dummy value    
+  ingress_internet_agw_fqdn: demoapp1.internet.caflabs.com # dummy value  
+  ingress_intranet_agw_fqdn: demoapp1.intranet.caflabs.com # dummy value    
+  egress_intranet_firewall_ip: 10.2.0.4 # dummy value intranet firewall subnet cidr + 4     
+  egress_internet_firewall_ip: 100.2.0.4 # dummy value internet firewall subnet cidr + 4    
+  # ingress_intranet_domain: caflabs.com # dummy value     
+  # ingress_internet_domain: caflabs.com # dummy value    
 
-
-
-                   
                
            
