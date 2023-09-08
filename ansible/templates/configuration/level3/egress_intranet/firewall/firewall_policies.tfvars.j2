@@ -97,7 +97,7 @@ azurerm_firewall_policy_rule_collection_groups = {
               "443",
             ]
             destination_addresses = [
-              "{{apex_ip}}" # TODO: set the apex ip addresses or on-prem ip addresses.
+              "{{on_prem_api_ip}}" # TODO: set the apex ip addresses or on-prem ip addresses.
             ]
             protocols = [
               "TCP",
@@ -115,7 +115,7 @@ azurerm_firewall_policy_rule_collection_groups = {
           #     "22", # sftp
           #   ]
           #   destination_addresses = [
-          #     "{{astra_ip}}" # TODO: set the astra ip addresses or on-prem ip addresses.
+          #     "{{on_prem_sftp_ip}}" # TODO: set the astra ip addresses or on-prem ip addresses.
           #   ]
           #   protocols = [
           #     "TCP",
@@ -133,7 +133,7 @@ azurerm_firewall_policy_rule_collection_groups = {
           #     "1414", # mq
           #   ]
           #   destination_addresses = [
-          #     "{{meson_ip}}" # TODO: set the astra ip addresses or on-prem ip addresses.
+          #     "{{on_prem_mq_ip}}" # TODO: set the astra ip addresses or on-prem ip addresses.
           #   ]
           #   protocols = [
           #     "TCP",

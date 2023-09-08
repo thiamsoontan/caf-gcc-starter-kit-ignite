@@ -86,14 +86,14 @@ aks_clusters = {
     # }      
 
     # testing - test identity and role based access control
-    identity = {
-      type                 = "UserAssigned"
-      managed_identity_key = "aks_usermsi"
-    }
-
     # identity = {
-    #   type = "SystemAssigned"
+    #   type                 = "UserAssigned"
+    #   managed_identity_key = "aks_usermsi"
     # }
+
+    identity = {
+      type = "SystemAssigned"
+    }
     # TODO: add subnet_id
     # vnet_key = "spoke_aks_re1"
     # subnet_id = "/subscriptions/{{subscription_id}}/resourceGroups/{{resource_group_name}}/providers/Microsoft.Network/virtualNetworks/{{internet_vnet_name}}/subnets/cep-snet-app-internet-ev"
