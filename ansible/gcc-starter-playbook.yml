@@ -1,6 +1,13 @@
-#
+# sample ignite commands
+# rover ignite \
+#   --playbook /tf/caf/landingzones/templates/platform/ansible.yaml \
+#   -e base_templates_folder=/tf/caf/landingzones/templates/platform \
+#   -e resource_template_folder=/tf/caf/landingzones/templates/resources \
+#   -e config_folder=/tf/caf/definitions/single_reuse/platform \
+#   -e landingzones_folder=/tf/caf/landingzones
 # If you are changing a value in this file you need to execute the following command to update the definition folder
 # cd /tf/caf/ansible
+# rover ignite --playbook "/tf/caf/ansible/gcc-starter-playbook.yml"
 # ansible-playbook gcc-starter-playbook.yml
 # sudo chmod -R -f 777 /tf/caf/gcc_starter
 # change internet and intranet agw ip 
@@ -56,9 +63,9 @@
       project_code: "{{configuration.project_code | trim}}"  
       env: "sandpit"        
 
-      apex_ip: "{{configuration_application.apex_ip | trim}}"
-      astra_ip: "{{configuration_application.astra_ip | trim}}"
-      meson_ip: "{{configuration_application.meson_ip | trim}}"
+      on_prem_api_ip: "{{configuration_application.on_prem_api_ip | trim}}"
+      on_prem_sftp_ip: "{{configuration_application.on_prem_sftp_ip | trim}}"
+      on_prem_mq_ip: "{{configuration_application.on_prem_mq_ip | trim}}"
       ingress_intranet_agw_ip: "{{configuration_application.ingress_intranet_agw_ip | trim}}"
       ingress_internet_agw_ip: "{{configuration_application.ingress_internet_agw_ip | trim}}"
       ingress_internet_aks_ip: "{{configuration_application.ingress_internet_aks_ip | trim}}"
