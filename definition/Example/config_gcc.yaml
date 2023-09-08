@@ -1,6 +1,6 @@
 ---
 configuration_gcc:
-  subscription_id : 6f035180-4066-42f0-b0fa-5fbc1ae67500 # 4d943279-dcc7-4b40-83b7-b7ce05a22117 # CEP 6f035180-4066-42f0-b0fa-5fbc1ae67500 # cep subscription
+  subscription_id : xxxxxx-4066-42f0-b0fa-xxxxxxxxxx 
   spn_name: gcci-spn-landing-zone-001 # TODO: configure how this spn is being used?
   # GCC 2.0 compartment information     
   resource_group_name : gcci-platform # gcci-rg-agency-vnets # gcci-platform # name of the agency resource group created by gcc to house the VNet during onboarding
