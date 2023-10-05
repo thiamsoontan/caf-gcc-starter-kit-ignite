@@ -15,6 +15,7 @@ diagnostics_definition = {
     }
   }
   
+{% if ingress_egress_agw | trim == '1' or  ingress_egress_agw_intranet | trim == '1' %}
   application_gateway = {
     name = "application_gateway_logs_and_metrics"
     categories = {
@@ -30,28 +31,30 @@ diagnostics_definition = {
       ]
     }
   } 
+{% endif %}  
 
-  apim = {
-    name = "apim_logs_and_metrics"
-    categories = {
-      metric = [
-        #["Category name",  "Diagnostics Enabled(true/false)", "Retention Enabled(true/false)", Retention_period]
-        ["AllMetrics", true, false, 7],
-      ]
-    }
-  }    
+#  apim = {
+#    name = "apim_logs_and_metrics"
+#    categories = {
+#      metric = [
+#        #["Category name",  "Diagnostics Enabled(true/false)", "Retention Enabled(true/false)", Retention_period]
+#        ["AllMetrics", true, false, 7],
+#      ]
+#    }
+#  }    
 
-  redis_cache = {
-    name = "redis_cache_logs_and_metrics"
+#  redis_cache = {
+#    name = "redis_cache_logs_and_metrics"
+#
+#    categories = {
+#      metric = [
+#        #["Category name",  "Diagnostics Enabled(true/false)", "Retention Enabled(true/false)", Retention_period]
+#        ["AllMetrics", true, false, 7],
+#      ]
+#    }
+#  }
 
-    categories = {
-      metric = [
-        #["Category name",  "Diagnostics Enabled(true/false)", "Retention Enabled(true/false)", Retention_period]
-        ["AllMetrics", true, false, 7],
-      ]
-    }
-  }
-
+{% if ingress_egress_firewall | trim == '1' or  ingress_egress_firewall_egress | trim == '1' or ingress_egress_firewall_intranet | trim == '1' or  ingress_egress_firewall_egress_intranet | trim == '1' %}
   azurerm_firewall = { # <- this is the definition_key
     name = "azurerm_firewall_logs_and_metrics"
     categories = {
@@ -66,8 +69,8 @@ diagnostics_definition = {
         ["AllMetrics", true, false, 7],
       ]
     }
-
   }
+{% endif %}  
 
   public_ip_address = {
     name = "public_ip_address_logs_and_metrics"
@@ -83,9 +86,9 @@ diagnostics_definition = {
         ["AllMetrics", true, false, 7],
       ]
     }
-
   }
 
+{% if management_bastion | trim == '1' %}
   bastion_host = {
     name = "bastion_host_logs_and_metrics"
     categories = {
@@ -100,6 +103,7 @@ diagnostics_definition = {
     }
 
   }
+{% endif %}  
 
   default_all = {
     name = "operational_logs_and_metrics"
@@ -116,6 +120,7 @@ diagnostics_definition = {
 
   }
 
+{% if internet_app_acr | trim == '1' %}
   azure_container_registry = {
     name = "acr_logs_and_metrics"
     categories = {
@@ -130,7 +135,11 @@ diagnostics_definition = {
       ]
     }
   }
+{% endif %}  
 
+
+
+{% if internet_app_aks | trim == '1' %}
 
 # Kubernetes Cluster Autoscaler
 # Kubernetes Controller Manager
@@ -168,7 +177,9 @@ diagnostics_definition = {
       ]
     }
   }
+{% endif %}    
 
+{% if internet_data_mssql | trim == '1' %}
   mssql_db = {
     name = "mssql_db_logs_and_metrics"
 
@@ -196,5 +207,6 @@ diagnostics_definition = {
       ]
     }
   }
-    
+{% endif %} 
+
 }

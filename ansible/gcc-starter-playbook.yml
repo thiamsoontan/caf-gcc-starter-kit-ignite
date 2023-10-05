@@ -71,7 +71,17 @@
       ingress_internet_aks_ip: "{{configuration_application.ingress_internet_aks_ip | trim}}"
       ingress_intranet_aks_ip: "{{configuration_application.ingress_intranet_aks_ip | trim}}"
       egress_intranet_firewall_ip:  "{{configuration_application.egress_intranet_firewall_ip | trim}}"
-      egress_internet_firewall_ip:  "{{configuration_application.egress_internet_firewall_ip | trim}}"      
+      egress_internet_firewall_ip:  "{{configuration_application.egress_internet_firewall_ip | trim}}"  
+
+      ingress_internet_aks_fqdn:  "{{configuration_application.ingress_internet_aks_fqdn | trim}}"  
+      ingress_internet_agw_fqdn:  "{{configuration_application.ingress_internet_agw_fqdn | trim}}"  
+      ingress_internet_dns_zone:  "{{configuration_application.ingress_internet_dns_zone | trim}}"  
+
+      ingress_intranet_aks_fqdn:  "{{configuration_application.ingress_intranet_aks_fqdn | trim}}"  
+      ingress_intranet_agw_fqdn:  "{{configuration_application.ingress_intranet_agw_fqdn | trim}}"  
+      ingress_intranet_dns_zone:  "{{configuration_application.ingress_intranet_dns_zone | trim}}"  
+
+
       # aks_ip_internet: "{{configuration_application.aks_ip_internet | trim}}"
       # aks_ip_intranet: "{{configuration_application.aks_ip_intranet | trim}}"
       # agw_ip_internet: "{{configuration_application.agw_ip_internet | trim}}"
@@ -128,6 +138,7 @@
       internet_app_vmss_linux: "{{solution_accelerators.internet_zone.app.app_vmss_linux | trim}}" 
       internet_app_vm_windows: "{{solution_accelerators.internet_zone.app.app_vm_windows | trim}}" 
       internet_app_vm_linux: "{{solution_accelerators.internet_zone.app.app_vm_linux | trim}}" 
+      internet_data_cosmosdb: "{{solution_accelerators.internet_zone.data.data_cosmosdb | trim}}" 
       internet_data_mssql: "{{solution_accelerators.internet_zone.data.data_mssql | trim}}" 
       internet_data_postgresql: "{{solution_accelerators.internet_zone.data.data_postgresql | trim}}" 
       internet_data_redis_cache: "{{solution_accelerators.internet_zone.data.data_redis_cache | trim}}" 
@@ -212,6 +223,7 @@
           path: "{{landingzone_folder}}/configuration/level4/project"
           state: directory
           mode: '0777' 
+        when: internet_vnet_name | trim  != "None"   
 
       - name: Create a directory if it does not exist
         ansible.builtin.file:
@@ -241,15 +253,19 @@
         ansible.builtin.file:
           path: "{{landingzone_folder}}/configuration/level4/management"
           state: directory
-          mode: '0777'    
+          mode: '0777'  
+        when: management_vnet_name | trim  != "None"          
      
       - name: Create a directory if it does not exist
         ansible.builtin.file:
           path: "{{landingzone_folder}}/configuration/level4/devops"
           state: directory
           mode: '0777'      
+        when: devops_vnet_name | trim  != "None"          
 
-      
+
+
+
       # end block folder structure                           
 # end folder structure
 
@@ -350,8 +366,8 @@
         loop: "{{shared_services_files_to_process.files}}"    
       # end creating tfvars files
 
-      when: internet_vnet_name | trim != ''
-      become: true
+      # when: internet_vnet_name | trim != "None"
+      # become: true
       # become_user: root
       ignore_errors: yes
       # end block          
@@ -380,15 +396,10 @@
 
       - name: set_internet vnet resource id to vnet_resource_id
         set_fact:
-          vnet_resource_id: "{{ '/subscriptions/' + subscription_id | trim + '/resourceGroups/' + resource_group_name | trim + '/providers/Microsoft.Network/virtualNetworks/' + ingress_egress_vnet_name_ingress_internet | trim }}"
-        when: internet_vnet_name | trim  != ""
-
-      - name: set_internet vnet resource id to vnet_resource_id
-        set_fact:
           vnet_resource_id: "{{ '/subscriptions/' + subscription_id | trim + '/resourceGroups/' + resource_group_name | trim + '/providers/Microsoft.Network/virtualNetworks/' + ingress_egress_vnet_name_egress_internet | trim }}"
-        when: ingress_egress_vnet_name_ingress_internet | trim  != ""
+        when: ingress_egress_vnet_name_ingress_internet | trim  != "None"
 
-      when: ingress_egress_vnet_name_ingress_internet | trim != ''
+      when: ingress_egress_vnet_name_ingress_internet | trim != "None"
       become: true
       # become_user: root
       ignore_errors: yes
@@ -436,7 +447,7 @@
         loop: "{{networking_hub_files_to_process.files}}"    
       # end creating tfvars files
 
-      when: ingress_egress_vnet_name_ingress_internet | trim != ''
+      when: ingress_egress_vnet_name_ingress_internet | trim != "None"
       become: true
       ignore_errors: yes
       # end block          
@@ -607,17 +618,13 @@
           cidr_subnet_gut: ""
           vnet_resource_id: ""
 
-      - name: set_internet vnet resource id to vnet_resource_id
-        set_fact:
-          vnet_resource_id: "{{ '/subscriptions/' + subscription_id | trim + '/resourceGroups/' + resource_group_name | trim + '/providers/Microsoft.Network/virtualNetworks/' + ingress_egress_vnet_name_ingress_internet | trim }}"
-        when: internet_vnet_name | trim  != ""
 
       - name: set_internet vnet resource id to vnet_resource_id
         set_fact:
           vnet_resource_id: "{{ '/subscriptions/' + subscription_id | trim + '/resourceGroups/' + resource_group_name | trim + '/providers/Microsoft.Network/virtualNetworks/' + ingress_egress_vnet_name_egress_internet | trim }}"
-        when: ingress_egress_vnet_name_ingress_internet | trim  != ""
+        when: ingress_egress_vnet_name_ingress_internet | trim  != "None"
             
-      when: ingress_egress_vnet_name_ingress_internet | trim != ''
+      when: ingress_egress_vnet_name_ingress_internet | trim != "None"
       become: true
       # become_user: root
       ignore_errors: yes
@@ -665,7 +672,7 @@
         loop: "{{networking_hub_files_to_process.files}}"    
       # end creating tfvars files
 
-      when: ingress_egress_vnet_name_ingress_intranet | trim != ''
+      when: ingress_egress_vnet_name_ingress_intranet | trim != "None"
       become: true
       ignore_errors: yes
       # end block          
@@ -842,39 +849,39 @@
       # - name: set_cidr_internet_zone_subnet_web
       #   set_fact:
       #     cidr_subnet_web: "{{ cidr_internet_zone_subnet_web | trim }}"
-      #   when: cidr_internet_zone_subnet_web | trim  != ""
+      #   when: cidr_internet_zone_subnet_web | trim  != "None"
 
       - name: set_vnet_name
         set_fact:
           vnet_name: "{{ internet_vnet_name | trim }}"
-        when: internet_vnet_name | trim  != ""  
+        when: internet_vnet_name | trim  != "None"  
 
       - name: set_cidr_internet_zone_subnet_app
         set_fact:
           cidr_subnet_app: "{{ cidr_internet_zone_subnet_app | trim }}"
-        when: cidr_internet_zone_subnet_app | trim  != ""
+        when: cidr_internet_zone_subnet_app | trim  != "None"
 
       - name: set_cidr_internet_zone_subnet_data
         set_fact:
           cidr_subnet_data: "{{ cidr_internet_zone_subnet_data | trim }}"
-        when: cidr_internet_zone_subnet_data | trim  != ""      
+        when: cidr_internet_zone_subnet_data | trim  != "None"      
 
       # - name: set_cidr_internet_zone_subnet_it
       #   set_fact:
       #     cidr_subnet_it: "{{ cidr_internet_zone_subnet_it | trim }}"
-      #   when: cidr_internet_zone_subnet_it | trim  != ""      
+      #   when: cidr_internet_zone_subnet_it | trim  != "None"      
 
       # - name: set_cidr_internet_zone_subnet_gut
       #   set_fact:
       #     cidr_subnet_gut: "{{ cidr_internet_zone_subnet_gut | trim }}"
-      #   when: cidr_internet_zone_subnet_gut | trim  != ""   
+      #   when: cidr_internet_zone_subnet_gut | trim  != "None"   
 
       - name: set_internet vnet resource id to vnet_resource_id
         set_fact:
           vnet_resource_id: "{{ '/subscriptions/' + subscription_id | trim + '/resourceGroups/' + resource_group_name | trim + '/providers/Microsoft.Network/virtualNetworks/' + internet_vnet_name | trim }}"
-        when: internet_vnet_name | trim  != ""
+        when: internet_vnet_name | trim  != "None"
       
-      when: internet_vnet_name | trim != ''
+      when: internet_vnet_name | trim != "None"
       become: true
       # become_user: root
       ignore_errors: yes
@@ -927,7 +934,7 @@
         loop: "{{networking_spoke_files_to_process.files}}"    
       # end creating tfvars files
 
-      when: internet_vnet_name | trim != ''
+      when: internet_vnet_name | trim != "None"
       become: true
       ignore_errors: yes
       # end block          
@@ -1037,7 +1044,7 @@
 #       # end block              
 # # end level4/internet/apim
 
-# level4/internet/mssql
+# level4 internet/mssql
     - name: internet zone mssql
       # beign block
       block:
@@ -1086,7 +1093,7 @@
 # end level4/internet/mssql
 
 # level4 internet/acr 
-    - name: devops zone acr
+    - name: internet zone acr
       # beign block
       block:
 
@@ -1133,6 +1140,53 @@
       # end block   
 # end level4 internet/acr
 
+# level4 internet/cosmosdb 
+    - name: internet zone cosmosdb
+      # beign block
+      block:
+
+      # start set variables
+      - name: set_variables
+        set_fact:
+          zone_code: "{{zone_internet}}"
+          tier_code: "{{tier_app}}"   
+          solution_accelerators_parent_path: "{{landingzone_folder}}/configuration/level4/project/"
+          solution_accelerators_path: "{{landingzone_folder}}/configuration/level4/project/cosmosdb/"
+          templates_path: "{{templates_folder}}/configuration/level4/project/cosmosdb/"          
+      # end set variables
+
+      # start folder structure
+      - name: Create a directory if it does not exist
+        ansible.builtin.file:
+          path: "{{solution_accelerators_parent_path}}"
+          state: directory
+          mode: '0777'    
+
+      - name: Create a directory if it does not exist
+        ansible.builtin.file:
+          path: "{{solution_accelerators_path}}"
+          state: directory
+          mode: '0777'  
+      #end folder structure
+
+      # start creating tfvars files
+      - find:
+          paths: "{{templates_path}}" 
+          # recurse: yes
+          patterns: ["*.j2"]
+          file_type: file
+        register: cosmosdb_files_to_process
+
+      - name: copy cosmosdb
+        include_tasks: template_j2_to_tfvars.yml      
+        loop: "{{cosmosdb_files_to_process.files}}"     
+      # end creating tfvars files
+
+      when: internet_data_cosmosdb | trim == '1'  or internet_data_cosmosdb | trim == 'yes'
+      become: true
+      ignore_errors: no
+      # end block   
+# end level4 internet/cosmosdb
 
 # ----------------------------
 # end internet level4
@@ -1164,9 +1218,9 @@
       - name: set_internet vnet resource id to vnet_resource_id
         set_fact:
           vnet_resource_id: "{{ '/subscriptions/' + subscription_id | trim + '/resourceGroups/' + resource_group_name | trim + '/providers/Microsoft.Network/virtualNetworks/' + management_vnet_name | trim }}"
-        when: management_vnet_name | trim  != ""
+        when: management_vnet_name | trim  != "None"
       
-      when: management_vnet_name | trim  != ''
+      when: management_vnet_name | trim  != "None"
       become: true
       ignore_errors: yes
       # end block 
@@ -1214,7 +1268,7 @@
         loop: "{{networking_spoke_management_files_to_process.files}}"    
       # end creating tfvars files
 
-      when: management_vnet_name | trim != ''
+      when: management_vnet_name | trim != "None"
       become: true
       ignore_errors: yes
       # end block          
@@ -1296,19 +1350,19 @@
       # - name: set_cidr_devops_zone_subnet_runner
       #   set_fact:
       #     cidr_subnet_devops: "{{ cidr_devops_zone_subnet_runner | trim }}"
-      #   when: cidr_devops_zone_subnet_runner | trim  != ""
+      #   when: cidr_devops_zone_subnet_runner | trim  != "None"
 
       # - name: set_cidr_devops_zone_subnet_private_endpoint
       #   set_fact:
       #     cidr_subnet_private_endpoint: "{{ cidr_devops_zone_subnet_private_endpoint | trim }}"
-      #   when: cidr_devops_zone_subnet_private_endpoint | trim  != ""
+      #   when: cidr_devops_zone_subnet_private_endpoint | trim  != "None"
 
       - name: set_devops vnet resource id to vnet_resource_id
         set_fact:
           vnet_resource_id: "{{ '/subscriptions/' + subscription_id | trim + '/resourceGroups/' + resource_group_name | trim + '/providers/Microsoft.Network/virtualNetworks/' + devops_vnet_name | trim }}"
-        when: devops_vnet_name | trim  != ""
+        when: devops_vnet_name | trim  != "None"
       
-      when: devops_vnet_name | trim  != ''
+      when: devops_vnet_name | trim  != "None"
       become: true
       ignore_errors: yes
       # end block 
@@ -1356,7 +1410,7 @@
         loop: "{{networking_spoke_devops_files_to_process.files}}"    
       # end creating tfvars files
 
-      when: devops_vnet_name | trim != ''
+      when: devops_vnet_name | trim != "None"
       become: true
       ignore_errors: yes
       # end block          

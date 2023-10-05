@@ -8,7 +8,7 @@ application_gateway_applications_v1 = {
     backend_pools = {
       app1_bep = {
         name  = "app1-bep"
-        fqdns = ["aks.intranet.caflabs.com"] # TODO: set to the aks fqdn - set private dns "caflabs.com" A record "aks" ipaddress "{{ingress_internet_aks_ip}}"
+        fqdns = ["{{ingress_intranet_aks_fqdn}}.{{ingress_intranet_dns_zone}}"] #  ["aks.intranet.caflabs.com"] # TODO: set to the aks fqdn - set private dns "caflabs.com" A record "aks" ipaddress "{{ingress_internet_aks_ip}}"
         # ip_addresses = ["{{ingress_internet_aks_ip}}"] # aks internal lb ingress controller ip address
       }          
     }
@@ -39,22 +39,28 @@ application_gateway_applications_v1 = {
 
     http_listeners = {
       public = { # working
-        name                           = "app1_http_listener"
+        name                           = "app1_http_8081_public_listener"
         front_end_ip_configuration_key = "public"
-        front_end_port_key             = "80"
-        host_name                      = "demoapp1.intranet.caflabs.com" # TODO: set to your application fqdn
+        front_end_port_key             = "8081"
+        host_name                      = "{{ingress_intranet_agw_fqdn}}.{{ingress_intranet_dns_zone}}" # "demoapp1.intranet.caflabs.com" # TODO: set to your application fqdn
       }
       private = { # working
-        name                           = "app1_http_8080_listener"
+        name                           = "app1_http_80_private_listener"
+        front_end_ip_configuration_key = "private" # set to private frontend ip # "public"
+        front_end_port_key             = "80"
+        host_name                      = "{{ingress_intranet_agw_fqdn}}.{{ingress_intranet_dns_zone}}" # "demoapp1.intranet.caflabs.com" # TODO: set to your application fqdn
+      }        
+      private = { # working
+        name                           = "app1_http_8080_private_listener"
         front_end_ip_configuration_key = "private" # set to private frontend ip # "public"
         front_end_port_key             = "8080"
-        host_name                      = "demoapp1.intranet.caflabs.com" # TODO: set to your application fqdn
+        host_name                      = "{{ingress_intranet_agw_fqdn}}.{{ingress_intranet_dns_zone}}" # "demoapp1.intranet.caflabs.com" # TODO: set to your application fqdn
       }        
       private_ssl = {
         name                           = "app1_https_listener"
         front_end_ip_configuration_key = "private" # set to private frontend ip # "public"
         front_end_port_key             = "443"
-        host_name                      = "demoapp1.intranet.caflabs.com" # TODO: set to your application fqdn
+        host_name                      = "{{ingress_intranet_agw_fqdn}}.{{ingress_intranet_dns_zone}}" # "demoapp1.intranet.caflabs.com" # TODO: set to your application fqdn
         ssl_cert_key                   = "app1_ssl_cert" # ssl cert for appgateway
       }    
     }
@@ -93,7 +99,7 @@ application_gateway_applications_v1 = {
       app1_ssl_cert = {
         name = "app1"
         keyvault = {
-          certificate_key = "demoapp1.intranet.caflabs.com" 
+          certificate_key ="{{ingress_intranet_agw_fqdn}}.{{ingress_intranet_dns_zone}}" #  "demoapp1.intranet.caflabs.com" 
           # certificate_request_key = "wildcard_ingress" #for cert request
 
           # lz_key                  = "" #remote keyvault
@@ -105,7 +111,7 @@ application_gateway_applications_v1 = {
       app2_ssl_cert = {
         name = "aks1"
         keyvault = {
-          certificate_key = "aks.intranet.caflabs.com"
+          certificate_key = "{{ingress_intranet_aks_fqdn}}.{{ingress_intranet_dns_zone}}" #  "aks.intranet.caflabs.com"
           # certificate_request_key = "wildcard_ingress" #for cert request
 
         }
@@ -144,7 +150,7 @@ application_gateway_applications_v1 = {
       test = {
         name                         = "app1-http"
         protocol                     = "Http" # Http or Https
-        host                         = "aks.intranet.caflabs.com"
+        host                         = "{{ingress_intranet_aks_fqdn}}.{{ingress_intranet_dns_zone}}" # "aks.intranet.caflabs.com"
         host_name_from_http_settings = false
         # port               = "" # Leave not set if pick port from backend http settings
         path               = "/" # "/api/health"

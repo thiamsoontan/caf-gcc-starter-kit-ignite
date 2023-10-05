@@ -10,20 +10,24 @@ private_dns = {
 
     # vnet link is created after vnet is crated.
     vnet_links = {
+      
+      # app vnet link is required for project only
       app_internet_vnet_link = {
         name               = "app-internet-vnet"
         registration_enabled = true
-        virtual_network_id = "/subscriptions/6f035180-4066-42f0-b0fa-5fbc1ae67500/resourceGroups/gcci-rg-agency-vnets/providers/Microsoft.Network/virtualNetworks/gcci-vnet-internet"
-      }    
+        virtual_network_id = "/subscriptions/{{subscription_id}}/resourceGroups/gcci-rg-agency-vnets/providers/Microsoft.Network/virtualNetworks/gcci-vnet-internet"
+      }   
+
+      # management and devops is required for common infra 
       app_management_vnet_link = {
         name               = "app-management-vnet"
         registration_enabled = true
-        virtual_network_id = "/subscriptions/6f035180-4066-42f0-b0fa-5fbc1ae67500/resourceGroups/gcci-rg-agency-vnets/providers/Microsoft.Network/virtualNetworks/gcci-vnet-management"
+        virtual_network_id = "/subscriptions/{{subscription_id}}/resourceGroups/gcci-rg-agency-vnets/providers/Microsoft.Network/virtualNetworks/gcci-vnet-management"
       }  
       app_devops_vnet_link = {
         name               = "app-devops-vnet"
         registration_enabled = true
-        virtual_network_id = "/subscriptions/6f035180-4066-42f0-b0fa-5fbc1ae67500/resourceGroups/gcci-rg-agency-vnets/providers/Microsoft.Network/virtualNetworks/gcci-vnet-devops"
+        virtual_network_id = "/subscriptions/{{subscription_id}}/resourceGroups/gcci-rg-agency-vnets/providers/Microsoft.Network/virtualNetworks/gcci-vnet-devops"
       }               
     }
 

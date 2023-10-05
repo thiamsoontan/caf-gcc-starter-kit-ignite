@@ -3,7 +3,7 @@
 # 1. Create container group with system-managed identity
 
 # login to tenant - must use this to login
-az login --tenant [tenant id] e.g. htx sandpit xxxxxxxx-ffda-45c1-adc5-xxxxxxxx
+az login --tenant [tenant id] e.g. htx sandpit ac20add1-ffda-45c1-adc5-16a0db15810f
 
 # subscription
 az account set --subscription [your subscription id] 
@@ -22,7 +22,7 @@ Open cloud-shell through Azure Portal
 
 az group create --name escep-rg-launchpad --location southeastasia
 
-RG_ID="/subscriptions/xxxxxxxx-4066-42f0-b0fa-xxxxxxxx"
+RG_ID="/subscriptions/6f035180-4066-42f0-b0fa-5fbc1ae67500"
 
 # cep-vnet-am-devops-prd - recommended vnet name
 az container create \
@@ -324,6 +324,8 @@ rover -lz rover -lz /tf/caf/landingzones/caf_solution \
 22. acr
 
 23. aks
+
+23. cosmo db
 
 
 =================================================================================

@@ -5,9 +5,7 @@ variable "random_string_length" {
 
 # Location
 variable "location" {
-  # default = "East US"
   default = "southeastasia"  
-  # default = "australiaeast"    
 }
 
 # Resource groups
@@ -29,7 +27,7 @@ variable "gcci_virtual_networks" {
 
     gcci_ingress_vnet = {
       rg_key        = "gcci_vnets_rg"
-      name          = "gcci-vnet-ingress-internet"
+      name          = "{{ingress_egress_vnet_name_ingress_internet}}" # "gcci-vnet-ingress-internet"
       address_space = ["100.1.0.0/24"]
       tags          = {}
     } 
@@ -37,41 +35,41 @@ variable "gcci_virtual_networks" {
 
     gcci_egress_vnet = {
       rg_key        = "gcci_vnets_rg"
-      name          = "gcci-vnet-egress-internet"
+      name          = "{{ingress_egress_vnet_name_egress_internet}}" # "gcci-vnet-egress-internet"
       address_space = ["100.1.1.0/24"]
       tags          = {}
     } 
 
     gcci_ingress_intranet_vnet = {
       rg_key        = "gcci_vnets_rg"
-      name          = "gcci-vnet-ingress-intranet"
+      name          = "{{ingress_egress_vnet_name_ingress_intranet}}" # "gcci-vnet-ingress-intranet"
       address_space = ["10.2.0.0/25"]  # set to /25
       tags          = {}
     }     
     gcci_egress_intranet_vnet = {
       rg_key        = "gcci_vnets_rg"
-      name          = "gcci-vnet-egress-intranet"
+      name          = "{{ingress_egress_vnet_name_egress_intranet}}" # "gcci-vnet-egress-intranet"
       address_space = ["10.2.1.0/25"] # set to /25
       tags          = {}
     }          
 
     gcci_internet_vnet = {
       rg_key        = "gcci_vnets_rg"
-      name          = "gcci-vnet-internet"
+      name          = "{{internet_vnet_name}}" # "gcci-vnet-internet"
       address_space = ["100.2.0.0/24"]
       tags          = {}
     }
 
     gcci_mgmt_vnet = {
       rg_key        = "gcci_vnets_rg"
-      name          = "gcci-vnet-management"
+      name          = "{{management_vnet_name}}" # "gcci-vnet-management"
       address_space = ["100.3.0.0/24"]
       tags          = {}
     }
 
     gcci_devops_vnet = {
       rg_key        = "gcci_vnets_rg"
-      name          = "gcci-vnet-devops"
+      name          = "{{devops_vnet_name}}" # "gcci-vnet-devops"
       address_space = ["100.4.0.0/24"]
       tags          = {}
     }
