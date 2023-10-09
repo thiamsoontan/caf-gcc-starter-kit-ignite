@@ -8,7 +8,7 @@ purge all deleted key vaults before apply the launchpad
 ```bash
 rover -lz /tf/caf/landingzones/caf_launchpad \
   -launchpad \
-  -var-folder /tf/caf/gcc_starter/landingzone/configuration/level0/launchpad \
+  -var-folder /tf/caf/{{gcc_starter_project_folder}}/landingzone/configuration/level0/launchpad \
   -parallelism 30 \
   -env {{caf_environment}} \
   -a plan
@@ -17,7 +17,7 @@ rover -lz /tf/caf/landingzones/caf_launchpad \
 ```bash
 rover -lz /tf/caf/landingzones/caf_launchpad \
   -launchpad \
-  -var-folder /tf/caf/gcc_starter/landingzone/configuration/level0/launchpad \
+  -var-folder /tf/caf/{{gcc_starter_project_folder}}/landingzone/configuration/level0/launchpad \
   -parallelism 30 \
   -env {{caf_environment}} \
   -a apply
@@ -26,7 +26,7 @@ rover -lz /tf/caf/landingzones/caf_launchpad \
 ```bash
 rover -lz /tf/caf/landingzones/caf_launchpad \
   -launchpad \
-  -var-folder /tf/caf/gcc_starter/landingzone/configuration/level0/launchpad \
+  -var-folder /tf/caf/{{gcc_starter_project_folder}}/landingzone/configuration/level0/launchpad \
   -parallelism 30 \
   -env {{caf_environment}} \
   -a destroy

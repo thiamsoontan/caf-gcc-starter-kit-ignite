@@ -16,7 +16,7 @@ az account set --subscription {{subscription_id}}
 
 rover -lz rover -lz /tf/caf/landingzones/caf_solution \
 -level level4 \
--var-folder /tf/caf/gcc_starter/landingzone/configuration/level4/{{zone_code}}/vmss/windows \
+-var-folder /tf/caf/{{gcc_starter_project_folder}}/landingzone/configuration/level4/{{zone_code}}/vmss/windows \
 -parallelism 30 \
 -env {{caf_environment}} \
 -tfstate solution_accelerators_{{zone_code}}_vmss_windows.tfstate \
@@ -25,7 +25,7 @@ rover -lz rover -lz /tf/caf/landingzones/caf_solution \
 
 rover -lz rover -lz /tf/caf/landingzones/caf_solution \
 -level level4 \
--var-folder /tf/caf/gcc_starter/landingzone/configuration/level4/{{zone_code}}/vmss/windows \
+-var-folder /tf/caf/{{gcc_starter_project_folder}}/landingzone/configuration/level4/{{zone_code}}/vmss/windows \
 -parallelism 30 \
 -env {{caf_environment}} \
 -tfstate solution_accelerators_{{zone_code}}_vmss_windows.tfstate \
@@ -33,7 +33,7 @@ rover -lz rover -lz /tf/caf/landingzones/caf_solution \
 
 rover -lz rover -lz /tf/caf/landingzones/caf_solution \
 -level level4 \
--var-folder /tf/caf/gcc_starter/landingzone/configuration/level4/{{zone_code}}/vmss/windows \
+-var-folder /tf/caf/{{gcc_starter_project_folder}}/landingzone/configuration/level4/{{zone_code}}/vmss/windows \
 -parallelism 30 \
 -env {{caf_environment}} \
 -tfstate solution_accelerators_{{zone_code}}_vmss_windows.tfstate \

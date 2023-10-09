@@ -30,14 +30,14 @@ storage_account_blobs = {
     name                   = "helloworld.sh"
     storage_account_key    = "sa1"
     storage_container_name = "files"
-    source                 = "/tf/caf/gcc_starter/landingzone/configuration/level4/project/vm_windows/scripts/helloworld.sh"
+    source                 = "/tf/caf/{{gcc_starter_project_folder}}/landingzone/configuration/level4/project/vm_windows/scripts/helloworld.sh"
     parallelism            = 1
   }
   script2 = {
     name                   = "helloworld.ps1"
     storage_account_key    = "sa1"
     storage_container_name = "files"
-    source                 = "/tf/caf/gcc_starter/landingzone/configuration/level4/project/vm_windows/scripts/helloworld.ps1"
+    source                 = "/tf/caf/{{gcc_starter_project_folder}}/landingzone/configuration/level4/project/vm_windows/scripts/helloworld.ps1"
     parallelism            = 1
   }
 }

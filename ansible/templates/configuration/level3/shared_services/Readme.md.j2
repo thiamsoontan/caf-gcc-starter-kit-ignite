@@ -1,7 +1,7 @@
 
 rover -lz rover -lz /tf/caf/landingzones/caf_solution \
 -level level3 \
--var-folder /tf/caf/gcc_starter/landingzone/configuration/level3/shared_services \
+-var-folder /tf/caf/{{gcc_starter_project_folder}}/landingzone/configuration/level3/shared_services \
 -parallelism 30 \
 -env {{caf_environment}} \
 -skip-permission-check \
@@ -10,7 +10,7 @@ rover -lz rover -lz /tf/caf/landingzones/caf_solution \
 
 rover -lz rover -lz /tf/caf/landingzones/caf_solution \
 -level level3 \
--var-folder /tf/caf/gcc_starter/landingzone/configuration/level3/shared_services \
+-var-folder /tf/caf/{{gcc_starter_project_folder}}/landingzone/configuration/level3/shared_services \
 -parallelism 30 \
 -env {{caf_environment}} \
 -tfstate shared_services.tfstate \
@@ -18,7 +18,7 @@ rover -lz rover -lz /tf/caf/landingzones/caf_solution \
 
 rover -lz rover -lz /tf/caf/landingzones/caf_solution \
 -level level3 \
--var-folder /tf/caf/gcc_starter/landingzone/configuration/level3/shared_services \
+-var-folder /tf/caf/{{gcc_starter_project_folder}}/landingzone/configuration/level3/shared_services \
 -parallelism 30 \
 -env {{caf_environment}} \
 -tfstate shared_services.tfstate \

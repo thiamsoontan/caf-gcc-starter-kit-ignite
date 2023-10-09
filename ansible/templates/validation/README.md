@@ -8,7 +8,7 @@ vi azure-vote.yaml
 # copy and paste content of "/tf/caf/gcc_starter_kit/validation/sample-app-internal-lb.yaml" into azure-vote.yaml
 
 # sandpit tenant - must use this to login
-az login --tenant [your tenant id] # htx sandpit - ac20add1-ffda-45c1-adc5-16a0db15810f
+az login --tenant [your tenant id] 
 
 # CEP subscription
 az account set --subscription [your subscription id] # cep - xxxxxxxx-4066-42f0-xxxxxxxxxxxx

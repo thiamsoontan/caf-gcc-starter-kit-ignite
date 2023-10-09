@@ -1,7 +1,7 @@
 
 rover -lz rover -lz /tf/caf/landingzones/caf_solution \
 -level level3 \
--var-folder /tf/caf/gcc_starter/landingzone/configuration/level3/ingress_internet/firewall \
+-var-folder /tf/caf/{{gcc_starter_project_folder}}/landingzone/configuration/level3/ingress_internet/firewall \
 -parallelism 30 \
 -env {{caf_environment}} \
 -tfstate networking_firewall_ingress_internet.tfstate \
@@ -10,7 +10,7 @@ rover -lz rover -lz /tf/caf/landingzones/caf_solution \
 
 rover -lz rover -lz /tf/caf/landingzones/caf_solution \
 -level level3 \
--var-folder /tf/caf/gcc_starter/landingzone/configuration/level3/ingress_internet/firewall \
+-var-folder /tf/caf/{{gcc_starter_project_folder}}/landingzone/configuration/level3/ingress_internet/firewall \
 -parallelism 30 \
 -env {{caf_environment}} \
 -tfstate networking_firewall_ingress_internet.tfstate \
@@ -18,7 +18,7 @@ rover -lz rover -lz /tf/caf/landingzones/caf_solution \
 
 rover -lz rover -lz /tf/caf/landingzones/caf_solution \
 -level level3 \
--var-folder /tf/caf/gcc_starter/landingzone/configuration/level3/ingress_internet/firewall \
+-var-folder /tf/caf/{{gcc_starter_project_folder}}/landingzone/configuration/level3/ingress_internet/firewall \
 -parallelism 30 \
 -env {{caf_environment}} \
 -tfstate networking_firewall_ingress_internet.tfstate \

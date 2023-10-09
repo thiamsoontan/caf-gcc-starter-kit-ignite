@@ -4,7 +4,7 @@
 
 rover -lz rover -lz /tf/caf/landingzones/caf_solution \
 -level level3 \
--var-folder /tf/caf/gcc_starter/landingzone/configuration/level3/ingress_internet/agw \
+-var-folder /tf/caf/{{gcc_starter_project_folder}}/landingzone/configuration/level3/ingress_internet/agw \
 -env {{caf_environment}} \
 -tfstate solution_accelerators_agw_internet_ssl.tfstate \
 -a plan
@@ -12,14 +12,14 @@ rover -lz rover -lz /tf/caf/landingzones/caf_solution \
 
 rover -lz rover -lz /tf/caf/landingzones/caf_solution \
 -level level3 \
--var-folder /tf/caf/gcc_starter/landingzone/configuration/level3/ingress_internet/agw \
+-var-folder /tf/caf/{{gcc_starter_project_folder}}/landingzone/configuration/level3/ingress_internet/agw \
 -env {{caf_environment}} \
 -tfstate solution_accelerators_agw_internet_ssl.tfstate \
 -a apply
 
 rover -lz rover -lz /tf/caf/landingzones/caf_solution \
 -level level3 \
--var-folder /tf/caf/gcc_starter/landingzone/configuration/level3/ingress_internet/agw \
+-var-folder /tf/caf/{{gcc_starter_project_folder}}/landingzone/configuration/level3/ingress_internet/agw \
 -env {{caf_environment}} \
 -tfstate solution_accelerators_agw_internet_ssl.tfstate \
 -a destroy
