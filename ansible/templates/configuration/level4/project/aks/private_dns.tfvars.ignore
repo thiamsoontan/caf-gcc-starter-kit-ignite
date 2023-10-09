@@ -8,17 +8,17 @@ private_dns = {
       aks_internet_vnet_link = {
         name               = "aks-internet-vnet"
         registration_enabled = false # a virtual network can only link to one private dns zone with registration enabled
-        virtual_network_id = "/subscriptions/6f035180-4066-42f0-b0fa-5fbc1ae67500/resourceGroups/gcci-rg-agency-vnets/providers/Microsoft.Network/virtualNetworks/gcci-vnet-internet"
+        virtual_network_id = "/subscriptions/xxxxxxxx-4066-42f0-xxxxxxxxxxxx/resourceGroups/gcci-rg-agency-vnets/providers/Microsoft.Network/virtualNetworks/gcci-vnet-internet"
       }   
       aks_management_vnet_link = {
         name                 = "aks-management-vnet"
         registration_enabled = false
-        virtual_network_id   = "/subscriptions/6f035180-4066-42f0-b0fa-5fbc1ae67500/resourceGroups/gcci-rg-agency-vnets/providers/Microsoft.Network/virtualNetworks/gcci-vnet-management"
+        virtual_network_id   = "/subscriptions/xxxxxxxx-4066-42f0-xxxxxxxxxxxx/resourceGroups/gcci-rg-agency-vnets/providers/Microsoft.Network/virtualNetworks/gcci-vnet-management"
       }
       aks_devops_vnet_link = {
         name                 = "aks-devops-vnet"
         registration_enabled = false
-        virtual_network_id   = "/subscriptions/6f035180-4066-42f0-b0fa-5fbc1ae67500/resourceGroups/gcci-rg-agency-vnets/providers/Microsoft.Network/virtualNetworks/gcci-vnet-devops"
+        virtual_network_id   = "/subscriptions/xxxxxxxx-4066-42f0-xxxxxxxxxxxx/resourceGroups/gcci-rg-agency-vnets/providers/Microsoft.Network/virtualNetworks/gcci-vnet-devops"
       }                          
     }
 

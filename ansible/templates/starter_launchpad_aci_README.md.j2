@@ -16,7 +16,7 @@ RG_ID=$(az group show --name escep-rg-launchpad --query id --output tsv)
 
 az group create --name escep-rg-launchpad --location southeastasia
 
-RG_ID="/subscriptions/6f035180-4066-42f0-b0fa-5fbc1ae67500"
+RG_ID="/subscriptions/xxxxxxxx-4066-42f0-xxxxxxxxxxxx"
 
 az container create \
   --name aci-rovercontainer \
@@ -37,7 +37,7 @@ az container create \
 # TODO: to test if the below command work
 az RoleAssignment \
     -ObjectId 46b05031-eb48-4e48-b40a-684f9309a981 \
-    -Scope "/subscriptions/6f035180-4066-42f0-b0fa-5fbc1ae67500" \
+    -Scope "/subscriptions/xxxxxxxx-4066-42f0-xxxxxxxxxxxx" \
     -RoleDefinitionName "Owner"
 
 # OR   --command-line "tail -f /dev/null"
@@ -107,7 +107,7 @@ cp /tf/caf/patches/rover/functions.sh /tf/rover/functions.sh
 # ** IMPORTANT - set ARM_USE_MSI = true everytime you bring up the zsh terminal
 export ARM_USE_MSI=true
 
-# export ARM_SUBSCRIPTION_ID=6f035180-4066-42f0-b0fa-5fbc1ae67500
+# export ARM_SUBSCRIPTION_ID=xxxxxxxx-4066-42f0-xxxxxxxxxxxx
 # export ARM_TENANT_ID=ac20add1-ffda-45c1-adc5-16a0db15810f
 
 
